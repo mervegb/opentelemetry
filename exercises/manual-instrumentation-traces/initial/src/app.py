@@ -1,7 +1,6 @@
 # pyright: reportMissingTypeStubs=false, reportUnknownParameterType=false, reportMissingParameterType=false, reportUnknownArgumentType=false, reportUnknownMemberType=false, reportAttributeAccessIssue=false
 
 import time
-import trace
 
 import requests
 from client import ChaosClient, FakerClient
@@ -9,6 +8,9 @@ from flask import Flask, make_response, request
 
 from opentelemetry import trace as trace_api
 from opentelemetry.semconv.trace import SpanAttributes
+from opentelemetry.propagate import inject
+
+import json
 
 from trace_utils import create_tracer
 
@@ -25,11 +27,15 @@ def get_user():
     response = make_response(data, status)
     return response
 
-
+@tracer.start_as_current_span("do_stuff")
 def do_stuff():
+    headers = {}
+    inject(headers)
     time.sleep(0.1)
     url = "http://localhost:6000/"
-    response = requests.get(url)
+    response = requests.get(url, headers=headers) # inject trace context into headers, tracing context is encoded into bytes (serialization) 
+    print("Headers included in outbound request:")
+    print(json.dumps(response.json()["request"]["headers"], indent=2))
     return response
 
 

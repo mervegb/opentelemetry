@@ -6,8 +6,11 @@ import requests
 from client import ChaosClient, FakerClient
 from flask import Flask, make_response
 
+from metric_utils import create_meter, create_request_instruments
+
 # global variables
 app = Flask(__name__)
+meter = create_meter("app.py", "0.1")
 
 @app.route("/users", methods=["GET"])
 def get_user():
@@ -34,5 +37,6 @@ def index():
 
 
 if __name__ == "__main__":
+    request_instruments = create_request_instruments(meter)
     db = ChaosClient(client=FakerClient())
     app.run(host="0.0.0.0", debug=True)
