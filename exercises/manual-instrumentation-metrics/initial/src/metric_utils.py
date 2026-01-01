@@ -30,14 +30,25 @@ def create_metrics_pipeline(export_interval: int) -> MetricReader:
     return reader
 
 
-def create_request_instruments(meter: metric_api.Meter) -> dict[str, metric_api.Instrument]:
-    index_counter = meter.create_counter(
-        name="index_called",
-        unit="request",
-        description="Total amount of requests to /"
-    )
+# def create_request_instruments(meter: metric_api.Meter) -> dict[str, metric_api.Instrument]:
+#     index_counter = meter.create_counter(
+#         name="index_called",
+#         unit="request",
+#         description="Total amount of requests to /"
+#     )
 
+#     instruments = {
+#         "index_counter": index_counter,
+#     }
+#     return instruments
+
+def create_request_instruments(meter: metric_api.Meter) -> dict:
+    traffic_volume = meter.create_counter(
+        name="traffic_volume",
+        unit="request",
+        description="total volume of requests to an endpoint",
+    )
     instruments = {
-        "index_counter": index_counter,
+        "traffic_volume": traffic_volume,
     }
     return instruments
