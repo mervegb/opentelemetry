@@ -8,6 +8,7 @@ from opentelemetry.sdk.metrics.export import (
 from opentelemetry.metrics import Counter, Histogram, ObservableGauge
 from opentelemetry.sdk.metrics import MeterProvider
 
+
 # OTel API
 from opentelemetry import metrics as metric_api
 
@@ -90,3 +91,4 @@ def create_resource_instruments(meter: metric_api.Meter) -> dict:
         "cpu_utilization": cpu_util_gauage
     }
     return instruments
+
