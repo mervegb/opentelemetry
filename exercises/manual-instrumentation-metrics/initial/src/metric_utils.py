@@ -57,8 +57,15 @@ def create_request_instruments(meter: metric_api.Meter) -> dict:
         unit="request",
         description="rate of failed requests"
     )
+    request_latency = meter.create_histogram(
+        name="http.server.request.duration",
+        unit="s",
+        description="latency for a request to be served"
+    )
+    
     instruments = {
         "traffic_volume": traffic_volume,
-        "error_rate": error_rate
+        "error_rate": error_rate,
+        "request_latency": request_latency,
     }
     return instruments
