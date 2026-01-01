@@ -48,7 +48,13 @@ def create_request_instruments(meter: metric_api.Meter) -> dict:
         unit="request",
         description="total volume of requests to an endpoint",
     )
+    error_rate = meter.create_counter(
+        name="error_rate",
+        unit="request",
+        description="rate of failed requests"
+    )
     instruments = {
         "traffic_volume": traffic_volume,
+        "error_rate": error_rate
     }
     return instruments

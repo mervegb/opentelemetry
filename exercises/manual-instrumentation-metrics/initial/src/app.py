@@ -4,7 +4,7 @@ import time
 
 import requests
 from client import ChaosClient, FakerClient
-from flask import Flask, make_response
+from flask import Flask, Response, make_response, request
 
 from metric_utils import create_meter, create_request_instruments
 
@@ -40,6 +40,14 @@ def index():
 def before_request_func():
     request_instruments["traffic_volume"].add(1, attributes={"http.route": request.path})
 
+
+@app.after_request
+def after_request_func(response: Response) -> Response:
+    request_instruments["error_rate"].add(1, {
+        "http.route": request.path,
+        "state": "success" if response.status_code < 400 else "fail",
+    })
+    return response
 
 
 if __name__ == "__main__":
