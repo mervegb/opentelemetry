@@ -6,7 +6,9 @@ import requests
 from client import ChaosClient, FakerClient
 from flask import Flask, Response, make_response, request
 
-from metric_utils import create_meter, create_request_instruments
+from metric_utils import create_meter, create_request_instruments, create_resource_instruments
+
+import logging
 
 # global variables
 app = Flask(__name__)
@@ -64,6 +66,16 @@ def after_request_func(response: Response) -> Response:
 
 
 if __name__ == "__main__":
+    # disable logs of builtin webserver for load test
+    logging.getLogger("werkzeug").disabled = True
+    
+    # instrumentation
     request_instruments = create_request_instruments(meter)
+    create_resource_instruments(meter)
+    
+    # launch app
     db = ChaosClient(client=FakerClient())
     app.run(host="0.0.0.0", debug=True)
+
+
+## we'll use ApacheBench which is a tool for benchmarking HTTP Web servers
