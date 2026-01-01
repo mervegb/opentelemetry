@@ -42,6 +42,10 @@ def create_metrics_pipeline(export_interval: int) -> MetricReader:
 #     }
 #     return instruments
 
+
+# you can create multiple instruments from the same meter
+# traffic volume counter -> how much traffic do we get
+# error rate counter -> how many requests fail
 def create_request_instruments(meter: metric_api.Meter) -> dict:
     traffic_volume = meter.create_counter(
         name="traffic_volume",
