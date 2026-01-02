@@ -9,6 +9,8 @@ from opentelemetry import metrics
 from opentelemetry.metrics import Counter, Histogram, ObservableGauge
 from opentelemetry.sdk.metrics import MeterProvider
 
+from opentelemetry.exporter.otlp.proto.grpc.metric_exporter import OTLPMetricExporter
+
 # console export
 from opentelemetry.sdk.metrics.export import (
     ConsoleMetricExporter,
@@ -57,7 +59,7 @@ def create_views() -> list[View]:
 
 
 def create_otlp_reader(export_interval: int) -> MetricReader:
-    exporter = ConsoleMetricExporter()
+    exporter = OTLPMetricExporter()
     reader = PeriodicExportingMetricReader(
         exporter=exporter, export_interval_millis=export_interval
     )
